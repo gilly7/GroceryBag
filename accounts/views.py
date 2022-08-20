@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 
 def signup(request):
     if request.user.is_authenticated:
@@ -18,3 +19,23 @@ def signup(request):
                 return redirect('signin')
         messages.error(request, "Username or Password is missing!")
     return render(request, 'signup.html')
+def signin(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+
+    redirect_url = request.GET.get('next')
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user:
+                login(request, user)
+                if redirect_url:
+                    return redirect(redirect_url)
+                return redirect('index')
+            else:
+                messages.error(request, 'Incorrect username or password!')
+                return redirect(f'/accounts/signin?next={redirect_url}')
+        messages.error(request, "Username or Password is missing!")
+    return render(request, 'signin.html')
