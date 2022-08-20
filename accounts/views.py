@@ -1,7 +1,9 @@
+from telnetlib import LOGOUT
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 def signup(request):
     if request.user.is_authenticated:
@@ -39,3 +41,8 @@ def signin(request):
                 return redirect(f'/accounts/signin?next={redirect_url}')
         messages.error(request, "Username or Password is missing!")
     return render(request, 'signin.html')
+@login_required
+def signout(request):
+    LOGOUT(request)
+    messages.info(request, "Logged out!")
+    return redirect('signin')
