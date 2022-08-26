@@ -19,3 +19,17 @@ def add_item(request):
         messages.error(request, "One or more field(s) is missing!")
         return redirect('add-item')
     return render(request, "add.html")
+
+@login_required
+def update_item(request, item_id):
+    item = Item.objects.get(id=item_id)
+    date = item.date.strftime("%d-%m-%Y")
+    if request.method == 'POST':
+        item.name = request.POST.get("name")
+        item.quantity = request.POST.get("quantity")
+        item.status = request.POST.get("status")
+        item.date = request.POST.get("date")
+        item.save()
+        messages.success(request, 'Item updated successfully!')
+        return redirect('index')
+    return render(request, "update.html", {'item': item, 'date': date})

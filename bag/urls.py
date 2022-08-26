@@ -1,8 +1,9 @@
 from django.urls import path
 
-from bag.views import add_item, index
+from bag.views import add_item, index, update_item
 
 urlpatterns = [
     path('', index, name='index'),
     path('add-item', add_item, name='add-item'),
+    path('update-item/<int:item_id>', update_item, name='update-item'),
 ]
