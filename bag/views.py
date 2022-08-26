@@ -33,3 +33,10 @@ def update_item(request, item_id):
         messages.success(request, 'Item updated successfully!')
         return redirect('index')
     return render(request, "update.html", {'item': item, 'date': date})
+
+@login_required
+def delete_item(request, item_id):
+    item = Item.objects.get(id=item_id)
+    item.delete()
+    messages.error(request, 'Item deleted successfully!')
+    return redirect('index')
