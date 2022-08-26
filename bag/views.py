@@ -40,3 +40,11 @@ def delete_item(request, item_id):
     item.delete()
     messages.error(request, 'Item deleted successfully!')
     return redirect('index')
+
+@login_required
+def index(request):
+    items = Item.objects.filter(user=request.user).order_by('-id')
+    context = {
+        'items': items
+    }
+    return render(request, "index.html", context)
